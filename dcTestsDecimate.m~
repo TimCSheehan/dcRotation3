@@ -12,14 +12,14 @@
 % title('Decimated Signal')
 %%
 Fs = 30*1000;
-endTime = 4; %sec
+endTime = 1.4; %sec
 
 %don't change:
 timeStep = 1/Fs;
 timeVector = 0:timeStep:endTime;
 wNoise = wgn(Fs*endTime,1,0);
 %%
-exampleSignal = sin(2*pi*18*timeVector)+5*cos(1*pi*2*timeVector);
+exampleSignal = sin(2*pi*9*timeVector)+5*cos(1*pi*7*timeVector);
 plot(timeVector,exampleSignal)
 
 %%
