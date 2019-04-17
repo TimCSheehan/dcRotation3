@@ -90,6 +90,8 @@ for file = 1:length(Nex5Files) % Load .nex5 file (e.g. a mouse's recordings for 
             filter_range = [4 10]; % Bandpass filter range (e.g. theta 4-10 Hz)
             theta_filtered = eegfilt(data_window,Fs,filter_range(1),filter_range(2)); %Filter in the theta range
             theta_power = abs(hilbert(eegfilt(data_window,Fs,filter_range(1),filter_range(2))')').^2; %Calculate theta power
+            %% downsample
+            
             %% Store data per event
             Session.Events.LPON.data_window{event_index} = data_window;
             Session.Events.LPON.theta_filtered{event_index} = theta_filtered;

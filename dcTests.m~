@@ -83,11 +83,11 @@ psd_y1 = (1/(Fs*N)) * abs(y1_dft).^2;
 psd_y1(2:end-1) = 2*psd_y1(2:end-1);
 freq = 0:Fs/length(y1):Fs/2;
 
-notch_dft = fft(filtered_notch);
+notch_dft = fft(filter);
 notch_dft = notch_dft(1:N/2+1);
-psd_notch = (1/(Fs*N)) * abs(notch_dft).^2;
-psd_notch(2:end-1) = 2*psd_notch(2:end-1);
-freq_notch = 0:Fs/length(filtered_notch):Fs/2;
+psd_y1 = (1/(Fs*N)) * abs(notch_dft).^2;
+psd_y1(2:end-1) = 2*psd_y1(2:end-1);
+freq = 0:Fs/length(y1):Fs/2;
 
 
 plot(freq,10*log10(psd_y1))
@@ -96,4 +96,4 @@ title('Periodogram Using FFT')
 xlabel('Frequency (Hz)')
 ylabel('Power/Frequency (dB/Hz)')
 hold on
-plot(freq_notch,10*log10(psd_notch))
+plot(freq,10*log10(psd_notch))
