@@ -97,3 +97,31 @@ xlabel('Frequency (Hz)')
 ylabel('Power/Frequency (dB/Hz)')
 hold on
 plot(freq_notch,10*log10(psd_notch))
+
+%%
+
+
+    %EXAMPLE: Decimate a signal by a factor of four
+    t = 0:.00025:1;  % Time vector
+    x = sin(2*pi*30*t) + sin(2*pi*60*t);
+    y = decimate(x,4);
+    subplot(1,2,1);
+    stem(x(1:120)), axis([0 120 -2 2])   % Original signal
+    title('Original Signal')
+    subplot(1,2,2);
+    stem(y(1:30))                        % Decimated signal
+    title('Decimated Signal')
+
+ %%
+ 
+ 
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
