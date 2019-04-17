@@ -72,10 +72,10 @@ for file = 1:length(Nex5Files) % Load .nex5 file (e.g. a mouse's recordings for 
         LFP_Data = nex5FileData.contvars{channel}.data; %extracts channel LFP
         
         %% Notch Filter
-        %w=60/(Fs/2);
-        %bw=w;
-        %[num,den]=iirnotch(w,bw); % notch filter implementation 
-        %data_notch=filter(num,den,data);
+        wo = 60/(Fs/2);
+        bw = wo/35;
+        [num,den]=iirnotch(wo,bw); % notch filter implementation 
+        data_notch=filter(num,den,LFP_Data);
         
         %% Bandpass filter
         [b, a] = butter(2, [.5 250]/(Fs/2)); % Create butterworth Filter (.5 - 250 Hz)
