@@ -5,8 +5,9 @@ Nex5Files = listing(3:end);
 %% Load each mouse's recordings
 for file = 1:length(Nex5Files) % Load .nex5 file (e.g. a mouse's recordings for that day)
     nex5FileData = readNex5File(Nex5Files(file).name); % This is the entire .nex5 dataset
+    cd('
     Session.Name = Nex5Files(file).name(1:end-5); % This is the filename
-    status = ['Starting  ' Session.Name] % Indicates what file you're working with
+    status = ['Starting  ' Session.Name]; % Indicates what file you're working with
     %% Event timestamp extraction
     LP_OFF = nex5FileData.events{1}.timestamps;
     LP_ON = nex5FileData.events{2}.timestamps;
@@ -77,6 +78,10 @@ for file = 1:length(Nex5Files) % Load .nex5 file (e.g. a mouse's recordings for 
     end
 
 end
+
+%%
+
+
 toc %counts time to run script
 
 % Sumperipose filtered over raw
