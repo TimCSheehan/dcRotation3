@@ -89,7 +89,6 @@ for file = 1:length(Nex5Files) % Load .nex5 file (e.g. a mouse's recordings for 
         downsampled_LFP_Data = decimate(buttered_LFP_Data, 120, 'fir');
         
         %% test plots, remove later
-        
         TEST_Fs = 30*1000;
         TEST_downFs = 250;
         TEST_endTime = 1; %sec
@@ -97,13 +96,11 @@ for file = 1:length(Nex5Files) % Load .nex5 file (e.g. a mouse's recordings for 
         %don't change:
         TEST_timeStep = 1/Fs;
         TEST_timeVector = 0:TEST_timeStep:TEST_endTime;
-        TEST_yStop = (TEST_endTime*TEST_Fs) + 1 ;
-        
+        TEST_yStop = (TEST_endTime*TEST_Fs) + 1 ;        
         TEST_downTimeStep = 1/TEST_downFs;
         TEST_downTimeVector = 0:TEST_downTimeStep:TEST_endTime;
         TEST_downYStop = (TEST_endTime*TEST_downFs) +1;
 
-        
         plot(TEST_timeVector, LFP_Data(1:TEST_yStop))
         hold on
         plot(TEST_timeVector, notched_LFP_Data(1:TEST_yStop))
