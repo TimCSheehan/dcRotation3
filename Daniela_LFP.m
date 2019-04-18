@@ -82,7 +82,9 @@ for file = 1:length(Nex5Files) % Load .nex5 file (e.g. a mouse's recordings for 
         filtered_LFP_Data = filter(b, a, data_notch); % butterworth filtered data
         
         %% downsample
-        % decimate?
+        % decimate
+        
+        
             
         %% Create Peri-event data windows (in this case, lever press onset)
         for event_index = 1:3%length(Session.Events.LPON.ts)

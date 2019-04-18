@@ -12,7 +12,7 @@
 % title('Decimated Signal')
 %%
 Fs = 30*1000;
-endTime = 4; %sec
+endTime = 1; %sec
 
 %don't change:
 timeStep = 1/Fs;
@@ -24,7 +24,7 @@ plot(timeVector,exampleSignal)
 
 %%
 % decimate to 250 samples/sec
-downedFs = 40; %250 samples/sec, change to whatever you want to downsample to
+downedFs = 250; %250 samples/sec, change to whatever you want to downsample to
 downFactor = Fs/downedFs; %the factor to downsample BY...
 %%
 downedSignal = decimate(exampleSignal,downFactor);
@@ -34,10 +34,16 @@ downedTimeStep = 1/downedFs;
 downedTimeVector = 0:downedTimeStep:endTime;
 %%
 
-xLenSig = length(exampleSignal);
-xLenDowned = length(downedSignal);
+%xLenSig = length(exampleSignal);
+%xLenDowned = length(downedSignal);
 %%
 plot(timeVector,exampleSignal)
 hold on
 plot(downedTimeVector,downedSignal)
 title('Original vs Decimated Signal')
+
+
+
+%%
+
+decimateTest = decimate(timeVector,downFactor);
