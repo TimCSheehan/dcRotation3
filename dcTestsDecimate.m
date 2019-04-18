@@ -10,7 +10,14 @@
 % subplot(1,2,2);
 % stem(y(1:30))                        % Decimated signal
 % title('Decimated Signal')
+
+% daniela testing stuff
+%% NOTE: you should use the kind with 'fir' as a third argument
+% on ANYTHING large/requiring >13 downsample factor
+% you can also do it in stages, 
+% decY = decimate(y,5,'fir'), decimate that again, etc
 %%
+
 Fs = 30*1000;
 endTime = 4; %sec
 

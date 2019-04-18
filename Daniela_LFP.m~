@@ -99,9 +99,9 @@ for file = 1:length(Nex5Files) % Load .nex5 file (e.g. a mouse's recordings for 
         TEST_timeVector = 0:TEST_timeStep:TEST_endTime;
         TEST_yStop = (TEST_endTime*TEST_Fs) + 1 ;
         
-        TEST_downTimeStep = 1/TEST_downFs;
+        TEST_downTimeStep = TEST_timeStep*120;
         TEST_downTimeVector = 0:TEST_downTimeStep:TEST_endTime;
-        TEST_downYStop = (TEST_endTime*TEST_downFs) +1;
+        TEST_downYStop = TEST_endTime*TEST_
 
         
         plot(TEST_timeVector, LFP_Data(1:TEST_yStop))
@@ -110,7 +110,7 @@ for file = 1:length(Nex5Files) % Load .nex5 file (e.g. a mouse's recordings for 
         hold on
         plot(TEST_timeVector, buttered_LFP_Data(1:TEST_yStop))
         hold on
-        plot(TEST_downTimeVector, downsampled_LFP_Data(1:TEST_downYStop))
+        plot(TEST_downtimeVector, downsampled_LFP_Data(1:TEST_yStop))
             
         %% Create Peri-event data windows (in this case, lever press onset)
         for event_index = 1:3%length(Session.Events.LPON.ts)
