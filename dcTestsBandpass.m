@@ -23,11 +23,8 @@ for i = 1:length(freq_cell)
     %lowF    = freq_cell{i}(1);
     %highF   = freq_cell{i}(2);
     lowAndHigh = freq_cell{i};
-    y = bandpass(exampleSignal,lowAndHigh,30000);
-    
-    
-
-
+    y   = bandpass(exampleSignal,lowAndHigh,30000);
+    y2  = filtfilt(exampleSignal,lowAndHigh);
 end
 
 %%
