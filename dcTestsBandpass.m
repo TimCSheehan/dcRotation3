@@ -28,7 +28,15 @@ for i = 1:length(freq_cell)
     
 
 
+end
 
+%%
+plot(timeVector,exampleSignal)
+hold on
+plot(timeVector,y)
+title('Original vs alpha Signal')
+
+%%
 for i = 1:length(freq_cell) % for each band
     low = freq_cell{i}(1) % this is low
     high = freq_cell{i}(2) % this is high

@@ -91,7 +91,7 @@ for file = 1:length(Nex5Files) % Load .nex5 file (e.g. a mouse's recordings for 
         %% test plots, remove later
         TEST_Fs = 30*1000;
         TEST_downFs = 250;
-        TEST_endTime = 1; %sec
+        TEST_endTime = 0.2; %sec
 
         %don't change:
         TEST_timeStep = 1/Fs;
