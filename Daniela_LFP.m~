@@ -89,7 +89,7 @@ for file = 1:length(Nex5Files) % Load .nex5 file (e.g. a mouse's recordings for 
         downsampled_LFP_Data = decimate(buttered_LFP_Data, 120, 'fir');
         
         %%
-        choppedData = downsampled_LFP_Data
+        choppedData = downsample
         
         %% test plots, remove later
         TEST_Fs = 30*1000;
