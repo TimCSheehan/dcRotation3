@@ -1,8 +1,15 @@
+%------------------------------------------------------------------------
+% extract LFPs from a session.
+% outputs a struct, "Session" with peri-event LFP, 
+% theta power around each lever press
+%------------------------------------------------------------------------
+
 tic %counts time to run script
 selpath = uigetdir('F:\Daniela');
 listing = dir(selpath);
 Nex5Files = listing(3:end);
 cd(Nex5Files.folder)
+
 %% Load each mouse's recordings
 for file = 1:length(Nex5Files) % Load .nex5 file (e.g. a mouse's recordings for that day)
     
@@ -68,10 +75,9 @@ for file = 1:length(Nex5Files) % Load .nex5 file (e.g. a mouse's recordings for 
     timeStep = 1/Fs;
     tbeg = nex5FileData.tbeg;
     tend = nex5FileData.tend;
-    %addToEndTime = timeStep*(tend-tbeg);
     LFP_timestamps = tbeg:timeStep:tend;
     time_window = Session.base_time_start:1/Fs:Session.post_event_time;
-    for channel = 12%:length(nex5FileData.contvars) % for each LFP channel (skip the ADC and AUX channels)
+    for channel = 12:length(nex5FileData.contvars) % for each LFP channel (skip the ADC and AUX channels)
         
         LFP_Data = nex5FileData.contvars{channel}.data; %extracts channel LFP
         
@@ -85,42 +91,45 @@ for file = 1:length(Nex5Files) % Load .nex5 file (e.g. a mouse's recordings for 
         [b, a] = butter(2, [.5 250]/(Fs/2)); % Create butterworth Filter (.5 - 250 Hz)
         buttered_LFP_Data = filter(b, a, notched_LFP_Data); % butterworth filtered data
         
-        %% downsample
-        downsampled_LFP_Data = decimate(buttered_LFP_Data, 120, 'fir');
+        %% downsample 
+        downFs = 250; %freq to downsample to
+        downFactor = Fs/downFs; %factor to downsample by, sampling freq/goal freq
+        down_LFP_Timestamps = 
+        downsampled_LFP_Data = decimate(buttered_LFP_Data, downFactor, 'fir');
         
-        %%
-        choppedData = downsample
+        %% for testing, remove later
+%        choppedData = downsampled_LFP_Data(1:10*250);
         
-        %% test plots, remove later
-        TEST_Fs = 30*1000;
-        TEST_downFs = 250;
-        TEST_endTime = 0.2; %sec
-
-        %don't change:
-        TEST_timeStep = 1/Fs;
-        TEST_timeVector = 0:TEST_timeStep:TEST_endTime;
-        TEST_yStop = (TEST_endTime*TEST_Fs) + 1 ;        
-        TEST_downTimeStep = 1/TEST_downFs;
-        TEST_downTimeVector = 0:TEST_downTimeStep:TEST_endTime;
-        TEST_downYStop = (TEST_endTime*TEST_downFs) +1;
-
-        plot(TEST_timeVector, LFP_Data(1:TEST_yStop))
-        hold on
-        plot(TEST_timeVector, notched_LFP_Data(1:TEST_yStop))
-        hold on
-        plot(TEST_timeVector, buttered_LFP_Data(1:TEST_yStop))
-        hold on
-        plot(TEST_downTimeVector, downsampled_LFP_Data(1:TEST_downYStop))
+%         %% test plots, remove later
+%         TEST_Fs = 30*1000;
+%         TEST_downFs = 250;
+%         TEST_endTime = 0.2; %sec
+% 
+%         %don't change:
+%         TEST_timeStep = 1/Fs;
+%         TEST_timeVector = 0:TEST_timeStep:TEST_endTime;
+%         TEST_yStop = (TEST_endTime*TEST_Fs) + 1 ;        
+%         TEST_downTimeStep = 1/TEST_downFs;
+%         TEST_downTimeVector = 0:TEST_downTimeStep:TEST_endTime;
+%         TEST_downYStop = (TEST_endTime*TEST_downFs) +1;
+% 
+%         plot(TEST_timeVector, LFP_Data(1:TEST_yStop))
+%         hold on
+%         plot(TEST_timeVector, notched_LFP_Data(1:TEST_yStop))
+%         hold on
+%         plot(TEST_timeVector, buttered_LFP_Data(1:TEST_yStop))
+%         hold on
+%         plot(TEST_downTimeVector, downsampled_LFP_Data(1:TEST_downYStop))
             
         %% Create Peri-event data windows (in this case, lever press onset)
-        for event_index = 1:3%length(Session.Events.LPON.ts)
+        for event_index = 1:length(Session.Events.LPON.ts)
         
             Closest_event_idx = nearestpoint(Session.Events.LPON.ts(event_index),LFP_timestamps); %find nearest data timestamp to lever press onset timestamp
-            data_window = buttered_LFP_Data(Closest_event_idx + Session.base_time_start * Fs : Closest_event_idx + Session.post_event_time * Fs)'; % create peri-event data window
-            %% Bandpass Filter
-            filter_range = [4 10]; % Bandpass filter range (e.g. theta 4-10 Hz)
-            theta_filtered = eegfilt(data_window,Fs,filter_range(1),filter_range(2)); %Filter in the theta range
-            theta_power = abs(hilbert(eegfilt(data_window,Fs,filter_range(1),filter_range(2))')').^2; %Calculate theta power
+            data_window = downsampled_LFP_Data(Closest_event_idx + Session.base_time_start * Fs/downFs : Closest_event_idx + Session.post_event_time * Fs/downFs)'; % create peri-event data window
+            %% Bandpass Filter (CC made this)
+%             filter_range = [4 10]; % Bandpass filter range (e.g. theta 4-10 Hz)
+%             theta_filtered = eegfilt(data_window,Fs,filter_range(1),filter_range(2)); %Filter in the theta range
+%             theta_power = abs(hilbert(eegfilt(data_window,Fs,filter_range(1),filter_range(2))')').^2; %Calculate theta power
             
             %% stuff for all the bandpass stuffs
             
@@ -145,30 +154,30 @@ for file = 1:length(Nex5Files) % Load .nex5 file (e.g. a mouse's recordings for 
         
     end
     % Save session
-    %save(Session.Name, 'Session', '-v7.3');
+    save(Session.Name, 'Session', '-v7.3');
 
 end
 toc %counts time to run script
 
-% Sumperipose filtered over raw
-figure
-hold on
-% Plot raw
-subplot(3,1,1)
-plot(time_window, data_window)
-xlabel('Time (ms)')
-ylabel('Voltage (mV)')
-title('Raw')
-% Plot Theta Filtered
-subplot(3,1,2)
-plot(time_window, theta_filtered)
-xlabel('Time (ms)')
-ylabel('Voltage (mV)')
-title('Theta Filtered')
-% Plot Theta Power
-subplot(3,1,3)
-plot(time_window, log(theta_power));
-xlabel('Time (ms)')
-ylabel('Theta Power (log)')
-title('Theta Power')
-hold off
+% % Sumperipose filtered over raw
+% figure
+% hold on
+% % Plot raw
+% subplot(3,1,1)
+% plot(time_window, data_window)
+% xlabel('Time (ms)')
+% ylabel('Voltage (mV)')
+% title('Raw')
+% % Plot Theta Filtered
+% subplot(3,1,2)
+% plot(time_window, theta_filtered)
+% xlabel('Time (ms)')
+% ylabel('Voltage (mV)')
+% title('Theta Filtered')
+% % Plot Theta Power
+% subplot(3,1,3)
+% plot(time_window, log(theta_power));
+% xlabel('Time (ms)')
+% ylabel('Theta Power (log)')
+% title('Theta Power')
+% hold off

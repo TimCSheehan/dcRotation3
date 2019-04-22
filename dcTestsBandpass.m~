@@ -18,9 +18,9 @@ freqCell = {[1 4], [4 8] , [8 12], [12 30] , [30 50]};
 
 for i = 1:length(freqCell)
     lowAndHigh = freqCell{i};
-    y = bandpass(exampleSignal,lowAndHigh,downFs);
+    y = bandpass(exampleSignal,lowAndHigh,30000);
     
-    if i == 1
+    if i == 1:
         frequency_filtered.delta.filtered_data = y;
     elseif i == 2
         frequency_filtered.theta.filtered_data = filtered_data;
