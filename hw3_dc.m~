@@ -61,7 +61,7 @@ xlabel("Time lag (ms)")
 ylabel("Number of spikes")
 
 %====================================================================>>
-%                                                      3 ABCDE G     >>
+%                                                      3 ABCDE GH    >>
 %====================================================================>>
 
 %% 3
@@ -148,20 +148,14 @@ ylabel("Power ()")
   % G %   non-overlapping chunks of data of duration Tchunk=10 s. Again, 
   %%%%%   plot the power spectrum for both the signal and the signal+noise.
 
-[sigWelch,fWelch] = pwelch(simSignal, 100, 0,freqVec,Fs);
+P = pwelch(simSignal)
 
-nsWelch  = pwelch(ns,100,0,freqVec,Fs);
+  
+%% 3
+  %%%%%   
+  % H %   
+  %%%%%   
 
-figure(7)
-subplot(2,1,1);
-plot(fWelch,sigWelch,'color','k','LineWidth',2)
-title("Welch's estimate of power spectrum, pure signal")
-ylabel("Power ()")
 
-subplot(2,1,2);
-plot(fWelch,nsWelch,'color',dcGreenText,'LineWidth',2)
-title("Welch's estimate of power spectrum, noisy signal")
-xlabel("Frequency (Hz)")
-ylabel("Power ()")
 
 
