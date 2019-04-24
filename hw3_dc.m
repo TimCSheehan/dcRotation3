@@ -3,10 +3,7 @@
 %====================================================================>>
 
 % colors
-dcGreenText = 1/255*[68, 170, 68];
-dcYellowBox = 1/255*[225, 255, 127];
-dcGreenBox = 1/255*[163, 244, 140];
-dcTealBox = 1/255*[141, 244, 191];
+dcGreen = 1/255*[68, 170, 68];
 
 %====================================================================>>
 %                                                           1 ABC    >>
@@ -18,16 +15,16 @@ dcTealBox = 1/255*[141, 244, 191];
   %%%%%   bin. The recording is 2 s in duration, and sampled at dt = 2 ms. 
   %%%%%   Load the data and make a plot showing number of spikes vs. time.
 
-spikes = load("HW3_simulated_spikes.csv"); % load simulated spikes data
+spikes = load('HW3_simulated_spikes.csv'); % load simulated spikes data
 
 timeVec = spikes(1:end, 1);
 numSpikes = spikes(1:end, 2);
 
 figure(1)
-plot(timeVec, numSpikes, 'color', dcGreenText)
-title("Number of spikes over two seconds")
-xlabel("Time (s)")
-ylabel("Number of spikes")
+plot(timeVec, numSpikes, 'color', dcGreen)
+title('Number of spikes over two seconds')
+xlabel('Time (s)')
+ylabel('Number of spikes')
 %% 1
   %%%%%   Calculate the autocorrelation function of the spike trains.
   % B %   Plot the correlation vs. lag for lags ranging from -1 to 1 s.
@@ -38,9 +35,9 @@ ylabel("Number of spikes")
 
 figure(2)
 bar(lags,corSpikes,'k')
-title("Autocorrelation of spike times within two-second window")
-xlabel("Time lag (ms)")
-ylabel("Number of spikes")
+title('Autocorrelation of spike times within two-second window')
+xlabel('Time lag (ms)')
+ylabel('Number of spikes')
 
 % There is a rhythmic component to the spike train at ~12 Hz!
 
@@ -56,9 +53,12 @@ ylabel("Number of spikes")
 
 figure(3)
 bar(lagsUnb,corSpikesUnb,'k')
-title("Unbiased autocorrelation of spike times within two-second window")
-xlabel("Time lag (ms)")
-ylabel("Number of spikes")
+title('Unbiased autocorrelation of spike times within two-second window')
+xlabel('Time lag (ms)')
+ylabel('Number of spikes')
+
+% the unbiased autocorrelation remains level throughout the time window,
+% but at the edges of the time window, the correlation has large increases.
 
 %====================================================================>>
 %                                                      3 ABCDE G     >>
@@ -78,11 +78,11 @@ simTimeVec = 0:1/Fs:60;
 simSignal = sin(2*pi*2*simTimeVec) + 1.5*sin(2*pi*2.3*simTimeVec);
 
 figure(4)
-plot(simTimeVec,simSignal,'color',dcGreenText)
+plot(simTimeVec,simSignal,'k')
 xlim([0,30])
-title("Sum of sines signal")
-xlabel("Time (s)")
-ylabel("Amplitude (uV)")
+title('Sum of sines signal')
+xlabel('Time (s)')
+ylabel('Amplitude (uV)')
 
 %% 3
   %%%%%   Estimate the RMS of the signal by calculating
@@ -117,11 +117,11 @@ noise = randn(1,601) * noiseRMS ;
 ns = noise + simSignal;
 
 figure(5)
-plot(simTimeVec, ns)
+plot(simTimeVec, ns, 'color',dcGreen)
 xlim([0,30])
-title("Noisy sum of sines signal")
-xlabel("Time (s)")
-ylabel("Amplitude (uV)")
+title('Noisy sum of sines signal')
+xlabel('Time (s)')
+ylabel('Amplitude (uV)')
   
 %% 3
   %%%%%   Compute the Fourier transform of the signal+noise and take its    
@@ -136,15 +136,25 @@ powerSpec = abs(fftns).^2;
 f = (0:(length(powerSpec)-1))./(length(powerSpec)-1) ;
 freqVec = Fs.*f; %get frequency axis
 
+% the units for P(w) are: uV^2 / Hz
+%                   because Hz = 1/s,
+%                           uV^2 * s
 
 figure(6)
-semilogy(freqVec,powerSpec,'color',dcGreenText,'LineWidth',1.5)
-title("Periodogram")
-xlabel("Frequency (Hz)")
-ylabel("Power ()")
-
+semilogy(freqVec,powerSpec,'color',dcGreen,'LineWidth',1.5)
+title('Periodogram')
+xlabel('Frequency (Hz)')
+ylabel('Power (uV^2*s)')
 %% 3
-  %%%%%   Now use Welch?s method to estimate the power spectrum using 
+  %%%%%   Notice there are 4 peaks in the power spectrum, even though we 
+  % F %   only included two oscillation frequencies in our signal (at 2 
+  %%%%%   and 2.3 Hz). Using the result from HW2, question 2b, as well as 
+  %%%%%   the fact that the DFT is periodic with X[N-k]=X[-k], explain why 
+  %%%%%   there are additional peaks above the Nyquist frequency 
+  %%%%%   (F_ny=Fs/2). Which negative frequencies are these equivalent to?
+  
+%% 3
+  %%%%%   Now use Welch's method to estimate the power spectrum using 
   % G %   non-overlapping chunks of data of duration Tchunk=10 s. Again, 
   %%%%%   plot the power spectrum for both the signal and the signal+noise.
 
@@ -155,13 +165,19 @@ nsWelch  = pwelch(ns,100,0,freqVec,Fs);
 figure(7)
 subplot(2,1,1);
 plot(fWelch,sigWelch,'color','k','LineWidth',2)
-title("Welch's estimate of power spectrum, pure signal")
-ylabel("Power ()")
+title('Welch estimate of power spectrum, pure signal')
+ylabel('Power (uV^2*s)')
 
 subplot(2,1,2);
-plot(fWelch,nsWelch,'color',dcGreenText,'LineWidth',2)
-title("Welch's estimate of power spectrum, noisy signal")
-xlabel("Frequency (Hz)")
-ylabel("Power ()")
+plot(fWelch,nsWelch,'color',dcGreen,'LineWidth',2)
+title('Welchs estimate of power spectrum, noisy signal')
+xlabel('Frequency (Hz)')
+ylabel('Power (uV^2*s)')
 
+%% 3
+  %%%%%   Comment on the similarities and differences between the 
+  % H %   estimates in e and g. If you wanted a low variance, high-
+  %%%%%   accuracy estimate of the power spectrum and didn't need 
+  %%%%%   frequency resolution >0.1 Hz, which method would you use?
+  
 
