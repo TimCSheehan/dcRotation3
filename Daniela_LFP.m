@@ -6,9 +6,11 @@
 
 tic %counts time to run script
 selpath = uigetdir('F:\Daniela');
-listing = dir(selpath);
-Nex5Files = listing(3:end);
-cd(Nex5Files.folder)
+cd(selpath);
+Nex5files = dir('*.nex5');
+%listing = dir(selpath);
+%Nex5Files = listing(3:end);
+%cd(Nex5Files.folder)
 
 %% Load each mouse's recordings
 for file = 1:length(Nex5Files) % Load .nex5 file (e.g. a mouse's recordings for that day)
