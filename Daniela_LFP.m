@@ -15,6 +15,7 @@ Nex5files = dir('*.nex5');
 %% Load each mouse's recordings
 for file = 1:length(Nex5Files) % Load .nex5 file (e.g. a mouse's recordings for that day)
     
+    %dc try: keeping it as an int
     nex5FileData = readNex5File(Nex5Files(file).name); % This is the entire .nex5 dataset
     Session.Name = Nex5Files(file).name(1:end-5); % This is the filename
     status = ['Starting  ' Session.Name]; % Indicates what file you're working with
@@ -93,7 +94,12 @@ for file = 1:length(Nex5Files) % Load .nex5 file (e.g. a mouse's recordings for 
         [b, a] = butter(2, [.5 250]/(Fs/2)); % Create butterworth Filter (.5 - 250 Hz)
         buttered_LFP_Data = filter(b, a, notched_LFP_Data); % butterworth filtered data
         
+        
         %% downsample 
+        % dc try: downsample right away, to 1kHz
+        % dc try: don't use decimate, take an average of the nearest
+        % datapoints when you choose the "every 30" 
+        
         downFs = 250; %freq to downsample to
         downFactor = Fs/downFs; %factor to downsample by, sampling freq/goal freq
         downTimeStep = 1/downFs;
