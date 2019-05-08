@@ -7,7 +7,7 @@
 tic %counts time to run script
 selpath = uigetdir('F:\Daniela');
 cd(selpath);
-Nex5files = dir('*.nex5');
+Nex5Files = dir('*.nex5');
 %listing = dir(selpath);
 %Nex5Files = listing(3:end);
 %cd(Nex5Files.folder)
