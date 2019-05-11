@@ -56,10 +56,10 @@ for file = 1:length(listOfNexFiles)
         end
     end
     %Get Lever Press Lengths by subtraction and remove LPs with <100 ms IPI
-    LP_DUR = t_LP_OFF - t_LP_ON;
-    t_LP_ON = t_LP_ON(LP_DUR > 0.1);
-    t_LP_OFF = t_LP_OFF(LP_DUR > 0.1);
-    LP_DUR = t_LP_OFF - t_LP_ON;
+    LP_Length = t_LP_OFF - t_LP_ON;
+    t_LP_ON = t_LP_ON(LP_Length > 0.1);
+    t_LP_OFF = t_LP_OFF(LP_Length > 0.1);
+    LP_Length = t_LP_OFF - t_LP_ON;
     
     
     %% Add new fields to the Session struct so you can analyze...
@@ -76,12 +76,11 @@ for file = 1:length(listOfNexFiles)
     Session.Events.LPON.ts                  = t_LP_ON; % timestamps LP ON
     Session.Events.LPON.Event_Label         = 'Lever Press Onset';   
     
-    Session.Events.LeverPress_Durations     = LP_DUR;
+    Session.Events.LeverPress_Durations     = LP_Length;
     Session.Events.TotalReinforcersEarned   = length(REIN_ON);
-    
-    Session.base_time_start     = -5; % start time for baseline and data window (seconds)
-    Session.base_time_end       = -2; % end time for baseline window (seconds)
-    Session.post_event_time     = 5; % end time for data window (seconds)
+    Session.base_time_start = -5; % start time for baseline and data window (seconds)
+    Session.base_time_end = -2; % end time for baseline window (seconds)
+    Session.post_event_time = 5; % end time for data window (seconds)
     
     
     %% LFP Channel Processing
