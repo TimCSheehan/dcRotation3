@@ -91,6 +91,8 @@ for file = 1:length(listOfNexFiles)
     tend = nex5FileData.tend;
     LFP_timestamps = tbeg:timeStep:tend;
     time_window = Session.base_time_start:1/Fs:Session.post_event_time;
+    
+    %% for each channel tho
     for channel = 12:length(nex5FileData.contvars) % for each LFP channel (skip the ADC and AUX channels)
         
         LFP_Data = nex5FileData.contvars{channel}.data; %extracts channel LFP
