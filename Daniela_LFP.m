@@ -159,7 +159,6 @@ for file = 1:length(listOfNexFiles)
 %             theta_power = abs(hilbert(eegfilt(data_window,Fs,filter_range(1),filter_range(2))')').^2; %Calculate theta power
             
             %% stuff for all the bandpass stuffs
-            
 %            freq_cell = {[1 4], [4 8] , [8 12], [12 30] , [30 50]}
 %             for i = 1:length(freq_cell) % for each band
 %                 low = freq_cell{i}(1) % this is low
@@ -171,8 +170,6 @@ for file = 1:length(listOfNexFiles)
 %                     frequency_filtered.theta.filtered_data = filtered_data;
 %                 end  
 %             end
-
-            
             %% Store data per event
             Session.Events.LPON.data_window{event_index} = data_window;
             Session.Events.LPON.theta_filtered{event_index} = theta_filtered;
