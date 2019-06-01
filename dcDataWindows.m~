@@ -1,0 +1,31 @@
+function EVENT_dataWindow = dcDataWindows(LFP,behav,EVENT,window)
+window(1)=
+
+[window_tbeg,window_tend] = window;
+%% make window
+Fs = LFP.freq;
+timeStep = 1/Fs;
+tbeg = LFP.tbeg;
+tend = LFP.tend;
+%window_baseline_tend = -2; % end time for baseline window (seconds)
+%%
+
+%% LFP Channel Processing
+LFP_timestamps = tbeg:timeStep:tend;
+%%
+timeWindow = window_tbeg:timeStep:window_tend;
+%%
+% init LPON data windows array
+totalLPON = length(behav.LPON.ts);
+LPON_dataWindows=zeros(totalLPON,length(timeWindow));
+for event_index = 1:totalLPON
+    %find nearest data timestamp to lever press onset timestamp
+    LFP_event_idx = nearestpoint(behav.LPON.ts(event_index),LFP_timestamps); 
+    % create peri-event data window
+    % captures the LFP within that window
+    dataWindow = LFP.channel{1}.data(LFP_event_idx + (window_tbeg * Fs) : LFP_event_idx + window_tend * Fs)'; 
+    %% Store data per event
+    LPON_dataWindows(event_index,:) = dataWindow;
+end
+end
+

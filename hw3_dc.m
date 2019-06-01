@@ -133,7 +133,7 @@ fftns = fft(ns);
 
 powerSpec = abs(fftns).^2;
 
-f = (0:(length(powerSpec)-1))./(length(powerSpec)-1) ;
+f = (0:(length(ns)-1))./(length(ns)-1) ;
 freqVec = Fs.*f; %get frequency axis
 
 % the units for P(w) are: uV^2 / Hz
