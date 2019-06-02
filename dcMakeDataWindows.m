@@ -1,7 +1,6 @@
-function EVENT_dataWindows = dcDataWindows(LFP,behav,EVENT,window)
+function EVENT_dataWindows = dcMakeDataWindows(LFP,behav,EVENT,window,ch)
     window_tbeg = window(1);
     window_tend = window(2);
-    %% make window
     Fs = LFP.freq;
     timeStep = 1/Fs;
     tbeg = LFP.tbeg;
@@ -19,7 +18,7 @@ function EVENT_dataWindows = dcDataWindows(LFP,behav,EVENT,window)
         LFP_event_idx = nearestpoint(behav.(EVENT).ts(event_index),LFP_timestamps); 
         % create peri-event data window
         % captures the LFP within that window
-        dataWindow = LFP.channel{1}.data(LFP_event_idx + (window_tbeg * Fs) : LFP_event_idx + window_tend * Fs)'; 
+        dataWindow = LFP.channel{ch}.data(LFP_event_idx + (window_tbeg * Fs) : LFP_event_idx + window_tend * Fs)'; 
         %% Store data per event
         EVENT_dataWindows(event_index,:) = dataWindow;
     end

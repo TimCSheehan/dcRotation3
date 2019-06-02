@@ -1,11 +1,24 @@
-function spg = dcMeanSpectrogram(arrayOfDataWindows, Fs, window)
+function f1 = dcMeanSpectrogram(arrayOfDataWindows, Fs)
 %% get average spectrogram
-    window_tbeg = window(1);
-    window_tend = window(2);
     totalSpecs = size(arrayOfDataWindows,1);
-    %%
+    %title = "animalid group event" 
+    % try getting this title somewhere along the
+    
+    % fix timestamps part, 
+    % this will fail if the time window is asymmetrical:
+    timestamps = 0:1/Fs:size(arrayOfDataWindows, 2)/Fs;
+    timestamps = timestamps - median(timestamps); % to shift the middle to zero
+
+    lfp.samplingRate = Fs;
+    lfp.timestamps = timestamps(1:size(arrayOfDataWindows, 2));
+
     for row = 1:totalSpecs
-       [s, f, t, ps] = spectrogram(arrayOfDataWindows(row,:), 128, 120, 128, Fs, 'yaxis');
+        lfp.data = arrayOfDataWindows(row,:)';
+
+        wavespec = bz_WaveSpec(lfp);
+
+        ps = abs(wavespec.data').^2;
+
        if row == 1
            sumps = ps;
        end
@@ -16,18 +29,15 @@ function spg = dcMeanSpectrogram(arrayOfDataWindows, Fs, window)
            meanps = sumps/totalSpecs;
        end
     end
-    %%  
-    t_toPlot = window_tbeg:range(window)/(length(t)-1):window_tend;
-
-    spg = figure();
-    a = axes;
-    surf(t_toPlot, f, meanps, 'EdgeColor', 'none');
-    ylabel('Frequency (Hz)')
-    xlabel('Time (s)')
-    a.YScale = 'log';
-    a.YLim = [0 100];
-    view([0 90])
-    axis tight
-
+    %% figure
+    f1 = figure;
+    a1 = axes;
+    p1 = imagesc(wavespec.timestamps, wavespec.freqs, meanps);
+    hold on
+    p2 = line([0 0], [0 1000], 'Color', 'w');
+    a1.YDir = 'normal';
+    % a1.YScale = 'log';
+    y1 = ylabel('Frequency (Hz)');
+    x1 = xlabel('Time (sec)');
 end
 

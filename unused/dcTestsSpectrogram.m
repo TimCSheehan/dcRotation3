@@ -47,17 +47,18 @@ axis off
 
 %%
 window = [-3, 3];
+channel = 1;
 
-LPON_dataWindows    = dcDataWindows(LFP, behav, 'LPON', window);
-LPOFF_dataWindows   = dcDataWindows(LFP, behav, 'LPOFF', window);
-ReinON_dataWindows  = dcDataWindows(LFP, behav, 'ReinON', window);
-ReinOFF_dataWindows = dcDataWindows(LFP, behav, 'ReinOFF', window);
+LPON_dataWindows    = dcMakeDataWindows(LFP, behav, 'LPON',     window, channel);
+LPOFF_dataWindows   = dcMakeDataWindows(LFP, behav, 'LPOFF',    window, channel);
+ReinON_dataWindows  = dcMakeDataWindows(LFP, behav, 'ReinON',   window, channel);
+ReinOFF_dataWindows = dcMakeDataWindows(LFP, behav, 'ReinOFF',  window, channel);
 
 %% MEAN SPECTROGRAMS
 
-dcMeanSpectrogram(ReinON_dataWindows,Fs,window);
+dcMeanSpectrogram(ReinON_dataWindows,Fs);
 
-dcMeanSpectrogram(ReinOFF_dataWindows,Fs,window);
+dcMeanSpectrogram(ReinOFF_dataWindows,Fs);
 
 %%
 for row = 1:10 %first 10 lever press onsets
@@ -69,14 +70,12 @@ for row = 1:58 %first x lever press onsets
     plot(ReinON_dataWindows(row,:))
     hold on
 end
-%%
+%% old
 doSpecOnThisSingle = ReinON_dataWindows(1,:);
 %% once
 [s, f, t, ps] = spectrogram(doSpecOnThisSingle, 128, 120, 128, Fs, 'yaxis');
 
 t_toPlot = window_tbeg:range(window)/(length(t)-1):window_tend;
-
-
 
 spg = figure();
 a = axes;
