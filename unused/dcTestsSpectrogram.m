@@ -8,7 +8,7 @@ dcBlue = 1/255*[66, 185, 255];
 %%
 Fs = LFP.freq;
 totalCh = length(LFP.channel);
-pieceToPlot = [0,Fs*60*5];
+pieceToPlot = [Fs*60*5, Fs*60*40];
 %% plot raw stuff
 for ch = 1:totalCh
     subplot(totalCh,1,ch) 
