@@ -8,8 +8,10 @@ dcRed = 1/255*[224, 17, 73];
 dcBlue = 1/255*[66, 185, 255];
 %% load LFP and behav mats.
 % have to be in the folder you want
-load('air_2676-1600-4_behavior.mat')
-load('air_2676-1600-4_LFP.mat')
+dirbehav = dir('*_behavior.mat');
+load(dirbehav.name)
+dirLFP = dir('*_LFP.mat');
+load(dirLFP.name)
 %%
 %make behav into success and fails
 %% set things 
@@ -17,18 +19,21 @@ Fs = LFP.freq;
 window = [-3, 3];
 channel = 1;
 %% make data window arrays to feed to spectrogram
-LPON_dataWindows    = dcMakeDataWindows(LFP, behav, 'LPON',     window, channel);
-LPOFF_dataWindows   = dcMakeDataWindows(LFP, behav, 'LPOFF',    window, channel);
-ReinON_dataWindows  = dcMakeDataWindows(LFP, behav, 'ReinON',   window, channel);
+%LPON_dataWindows    = dcMakeDataWindows(LFP, behav, 'LPON',     window, channel);
+%LPOFF_dataWindows   = dcMakeDataWindows(LFP, behav, 'LPOFF',    window, channel);
+ReinON_dataWindows_air2525  = dcMakeDataWindows(LFP, behav, 'ReinON',   window, channel);
 %ReinOFF_dataWindows = dcMakeDataWindows(LFP, behav, 'ReinOFF',  window, channel);
-
+ReinON_dataWindows_air  = dcMakeDataWindows(LFP, behav, 'ReinON',   window, channel);
+ReinON_dataWindows_air  = dcMakeDataWindows(LFP, behav, 'ReinON',   window, channel);
+ReinON_dataWindows_CIE  = dcMakeDataWindows(LFP, behav, 'ReinON',   window, channel);
+ReinON_dataWindows_CIE  = dcMakeDataWindows(LFP, behav, 'ReinON',   window, channel);
+ReinON_dataWindows_CIE  = dcMakeDataWindows(LFP, behav, 'ReinON',   window, channel);
 %% make mean SPECTROGRAMS
-
-dcMeanSpectrogram(ReinON_dataWindows(2,:),Fs);
+%single
+dcMeanSpectrogram(LPOFF_dataWindows(254,:),Fs);
 %%
-dcMeanSpectrogram(ReinON_dataWindows,Fs);
-
-dcMeanSpectrogram(LPON_dataWindows,Fs);
+mspectro_air2525 = dcMeanSpectrogram(ReinON_dataWindows_air2525,Fs);
+%%
 dcMeanSpectrogram(LPOFF_dataWindows,Fs);
 %%
 loopSpecOnThis = ReinON_dataWindows;
@@ -39,3 +44,64 @@ for row = 1:size(loopSpecOnThis,1)
 end
 
 %keyboard()
+%%
+% make some combined stuff
+%%
+arrayOfDataWindows = ReinON_dataWindows_air2525;
+%% get average spectrogram
+totalSpecs = size(arrayOfDataWindows,1);
+%title = "animalid group event" 
+% try getting this title somewhere along the
+
+% fix timestamps part, 
+% this will fail if the time window is asymmetrical:
+timestamps = 0:1/Fs:size(arrayOfDataWindows, 2)/Fs;
+timestamps = timestamps - median(timestamps); % to shift the middle to zero
+
+lfp.samplingRate = Fs;
+lfp.timestamps = timestamps(1:size(arrayOfDataWindows, 2));
+
+for row = 1:totalSpecs
+    lfp.data = arrayOfDataWindows(row,:)';
+
+    wavespec = bz_WaveSpec(lfp);
+
+    ps = abs(wavespec.data').^2;
+
+   if row == 1
+       sumps = ps;
+   end
+   if row > 1
+       sumps = sumps+ps;
+   end
+   if row == totalSpecs
+       meanps = sumps/totalSpecs;
+   end
+end
+%% capture only a band
+beta = [12.5, 30];
+theta = [7, 9];
+
+band = beta;
+
+for frequency = 1:wavespec.nfreqs
+    if frequency == 1
+        meanpsband = [];
+    end
+    if wavespec.freqs(frequency) > band(1) && wavespec.freqs(frequency) < band(2)
+        meanpsband = [meanpsband, meanps(frequency,:)];
+    end
+    
+end
+
+
+%% figure
+f1 = figure;
+a1 = axes;
+p1 = imagesc(wavespec.timestamps, wavespec.freqs, meanps);
+hold on
+p2 = line([0 0], [0 1000], 'Color', 'w');
+a1.YDir = 'normal';
+% a1.YScale = 'log';
+y1 = ylabel('Frequency (Hz)');
+x1 = xlabel('Time (sec)');

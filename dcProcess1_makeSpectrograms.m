@@ -8,8 +8,10 @@ dcRed = 1/255*[224, 17, 73];
 dcBlue = 1/255*[66, 185, 255];
 %% load LFP and behav mats.
 % have to be in the folder you want
-%load('air_2676-1600-4_behavior.mat')
-%load('air_2676-1600-4_LFP.mat')
+dirbehav = dir('*_behavior.mat');
+load(dirbehav.name)
+dirLFP = dir('*_LFP.mat');
+load(dirLFP.name)
 %%
 %make behav into success and fails
 %% set things 
@@ -18,10 +20,9 @@ window = [-3, 3];
 channel = 1;
 %% make data window arrays to feed to spectrogram
 %LPON_dataWindows    = dcMakeDataWindows(LFP, behav, 'LPON',     window, channel);
-LPOFF_dataWindows   = dcMakeDataWindows(LFP, behav, 'LPOFF',    window, channel);
+%LPOFF_dataWindows   = dcMakeDataWindows(LFP, behav, 'LPOFF',    window, channel);
 ReinON_dataWindows  = dcMakeDataWindows(LFP, behav, 'ReinON',   window, channel);
 %ReinOFF_dataWindows = dcMakeDataWindows(LFP, behav, 'ReinOFF',  window, channel);
-
 %% make mean SPECTROGRAMS
 %single
 dcMeanSpectrogram(LPOFF_dataWindows(254,:),Fs);
