@@ -1,4 +1,4 @@
-function Hd = dcLowpass
+function Hd = dcLowpass300
 %DCLOWPASS Returns a discrete-time filter object.
 
 % MATLAB Code

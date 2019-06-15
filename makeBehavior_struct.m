@@ -1,6 +1,34 @@
 function Behav = makeBehavior_struct(nex5struct)
-% extract/process behavior timestamps for a session,
-% outputs them in struct 'Behav'
+%% MAKE BEHAVIOR STRUCT ------------------------------------------------//
+%   Version 1
+%   6/14/2019 Daniela Cassataro, Christian Cazares
+% ----------------------------------------------------------------------//
+%   DEPENDENCIES:
+%       none
+% ----------------------------------------------------------------------//
+%   INPUT:
+%       a single matlab struct 
+%       (which has been read into your workspace from a nex5 file)
+% ----------------------------------------------------------------------//
+%   OUTPUT:
+%       a single matlab struct containing event names & timestamps for a
+%       whole behavior session
+% ----------------------------------------------------------------------//
+%   1. Assign names to each event type (previously expressed as numbers)
+%
+%   2. Adjust the beginning and end timestamps so they make sense with
+%       session start and end times
+%
+%   3. Populate a struct containing all event names and timestamps.
+% ----------------------------------------------------------------------//
+%   THINGS TO IMPROVE:
+%     * Add a set of timestamps for failed presses. If you do it here, you
+%       won't have to do it in all the different possible subsequent
+%       analyses. Doing that here is best.
+%     * Add whatever you decide to do about grouping failed presses and
+%       rapid presses in general. For both of these, you could do in 
+%       another processing step later, not neccesarily in this func.
+% ----------------------------------------------------------------------//
     %% Event timestamp extraction
     % make new vecs of timestamps of each type of event. 
     % pull from where they're already stored, in nex5FileData.events
@@ -19,7 +47,7 @@ function Behav = makeBehavior_struct(nex5struct)
     t_LP_ON = LP_ON(LP_ON > SESS_ON);
     t_LP_ON = t_LP_ON(t_LP_ON < SESS_OFF);
     
-    t_LP_ON = t_LP_ON(1:end-1); % [DC] why do we cut this out?
+    t_LP_ON = t_LP_ON(1:end-1); 
     %% Remove lever press onset and offset that don't follow each other
     % (e.g. Offsets occuring before Onsets)
     if ~(length(t_LP_OFF) == length(t_LP_ON))
